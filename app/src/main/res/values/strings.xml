@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="app_name">Spotify Streamer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="artist_image_view">Artist image view</string>
+
+    <string name="artist_name_test" translatable="false">Pxndx</string>
+    <string name="album_name_test" translatable="false">Para ti con desprecio</string>
+    <string name="track_name_test" translatable="false">3 + 1</string>
+
+    <string name="no_artist_found">No artists found, please refine your search</string>
+    <string name="empty_artist_name">Empty artist name</string>
+    <string name="artist_without_top_tracks">This artist has no top tracks</string>
+
+    <string name="artist_name">Artist name&#8230;</string>
+    <string name="title_activity_top_ten_tracks">Top 10 Tracks</string>
+
+</resources>
