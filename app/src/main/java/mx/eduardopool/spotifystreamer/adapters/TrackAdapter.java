@@ -11,6 +11,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
 
@@ -52,35 +54,34 @@ public class TrackAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
-        // reuse views
-        if (rowView == null) {
-            rowView = View.inflate(context, R.layout.track_row_item, null);
-            // configure view holder
-            TrackHolder viewHolder = new TrackHolder(rowView);
-            rowView.setTag(viewHolder);
+        TrackHolder trackHolder;
+        if (convertView != null) {
+            trackHolder = (TrackHolder) convertView.getTag();
+        } else {
+            convertView = View.inflate(context, R.layout.track_row_item, null);
+            trackHolder = new TrackHolder(convertView);
+            convertView.setTag(trackHolder);
         }
 
         TrackBean trackBean = getItem(position);
 
-        // fill data
-        TrackHolder holder = (TrackHolder) rowView.getTag();
-        Picasso.with(context).load(trackBean.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.trackImageView);
-        holder.albumNameTextView.setText(trackBean.getAlbumName());
-        holder.trackNameTextView.setText(trackBean.getName());
+        Picasso.with(context).load(trackBean.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(trackHolder.trackImageView);
+        trackHolder.albumNameTextView.setText(trackBean.getAlbumName());
+        trackHolder.trackNameTextView.setText(trackBean.getName());
 
-        return rowView;
+        return convertView;
     }
 
-    private static class TrackHolder {
-        private ImageView trackImageView;
-        private TextView albumNameTextView;
-        private TextView trackNameTextView;
+    static class TrackHolder {
+        @InjectView(R.id.track_image_view)
+        ImageView trackImageView;
+        @InjectView(R.id.album_name_text_view)
+        TextView albumNameTextView;
+        @InjectView(R.id.track_name_text_view)
+        TextView trackNameTextView;
 
         public TrackHolder(View view) {
-            trackImageView = (ImageView) view.findViewById(R.id.track_image_view);
-            albumNameTextView = (TextView) view.findViewById(R.id.album_name_text_view);
-            trackNameTextView = (TextView) view.findViewById(R.id.track_name_text_view);
+            ButterKnife.inject(this, view);
         }
     }
 

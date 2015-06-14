@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import mx.eduardopool.spotifystreamer.adapters.ArtistAdapter;
@@ -72,7 +73,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        ListView listView = ButterKnife.findById(view, android.R.id.list);
         artistAdapter = new ArtistAdapter(getBaseActivity(), artistBeans);
         listView.setAdapter(artistAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

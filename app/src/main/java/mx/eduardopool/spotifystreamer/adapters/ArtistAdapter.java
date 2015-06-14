@@ -11,6 +11,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 
@@ -52,32 +54,31 @@ public class ArtistAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
-        // reuse views
-        if (rowView == null) {
-            rowView = View.inflate(context, R.layout.artist_row_item, null);
-            // configure view holder
-            ArtistHolder viewHolder = new ArtistHolder(rowView);
-            rowView.setTag(viewHolder);
+        ArtistHolder artistHolder;
+        if (convertView != null) {
+            artistHolder = (ArtistHolder) convertView.getTag();
+        } else {
+            convertView = View.inflate(context, R.layout.artist_row_item, null);
+            artistHolder = new ArtistHolder(convertView);
+            convertView.setTag(artistHolder);
         }
 
         ArtistBean artist = getItem(position);
 
-        // fill data
-        ArtistHolder holder = (ArtistHolder) rowView.getTag();
-        Picasso.with(context).load(artist.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.artistImageView);
-        holder.artistNameTextView.setText(artist.getName());
+        Picasso.with(context).load(artist.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(artistHolder.artistImageView);
+        artistHolder.artistNameTextView.setText(artist.getName());
 
-        return rowView;
+        return convertView;
     }
 
-    private static class ArtistHolder {
-        private ImageView artistImageView;
-        private TextView artistNameTextView;
+    static class ArtistHolder {
+        @InjectView(R.id.artist_image_view)
+        ImageView artistImageView;
+        @InjectView(R.id.artist_name_text_view)
+        TextView artistNameTextView;
 
         public ArtistHolder(View view) {
-            artistImageView = (ImageView) view.findViewById(R.id.artist_image_view);
-            artistNameTextView = (TextView) view.findViewById(R.id.artist_name_text_view);
+            ButterKnife.inject(this, view);
         }
     }
 

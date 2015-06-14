@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 import mx.eduardopool.spotifystreamer.adapters.TrackAdapter;
-import mx.eduardopool.spotifystreamer.commons.Constants;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
+import mx.eduardopool.spotifystreamer.commons.Constants;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -65,7 +66,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_ten_tracks, container, false);
 
-        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        ListView listView = ButterKnife.findById(view, android.R.id.list);
         trackAdapter = new TrackAdapter(getActivity(), trackBeans);
         listView.setAdapter(trackAdapter);
 
