@@ -8,23 +8,11 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-
 /**
  * Base activity for common activities operations.
  * Created by EduardoPool on 6/9/15.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private static SpotifyService spotifyService;
-
-    public SpotifyService getSpotifyService() {
-        if (spotifyService == null) {
-            spotifyService = new SpotifyApi().getService();
-            //api.setAccessToken("BQDIsiZvtl-gPU-YiKgjOm0ttwCPKAND3HAYOD1Rzj59oU0YwruuwhvhjOhZ6eBaLV36gO-rofLdl2ghQ1C3qQ");
-        }
-        return spotifyService;
-    }
 
     public void showToastMessage(int stringResourceId) {
         showToastMessage(getString(stringResourceId));

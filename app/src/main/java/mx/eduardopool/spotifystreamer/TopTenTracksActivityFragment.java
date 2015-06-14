@@ -15,6 +15,7 @@ import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 import mx.eduardopool.spotifystreamer.adapters.TrackAdapter;
 import mx.eduardopool.spotifystreamer.commons.Constants;
+import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -57,7 +58,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
 
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put(SpotifyService.COUNTRY, Constants.Countries.MX);
-            getSpotifyService().getArtistTopTrack(artistId, queryMap, new Callback<Tracks>() {
+            SpotifyWS.getSpotifyService().getArtistTopTrack(artistId, queryMap, new Callback<Tracks>() {
                 @Override
                 public void success(final Tracks tracks, Response response) {
                     getActivity().runOnUiThread(new Runnable() {

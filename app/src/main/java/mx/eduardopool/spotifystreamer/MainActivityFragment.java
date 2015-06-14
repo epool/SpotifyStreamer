@@ -22,6 +22,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import mx.eduardopool.spotifystreamer.adapters.ArtistAdapter;
 import mx.eduardopool.spotifystreamer.util.ViewUtil;
+import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -152,7 +153,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
             showToastMessage(R.string.empty_artist_name);
             return;
         }
-        getSpotifyService().searchArtists(query, new Callback<ArtistsPager>() {
+        SpotifyWS.getSpotifyService().searchArtists(query, new Callback<ArtistsPager>() {
             @Override
             public void success(final ArtistsPager artistsPager, Response response) {
                 getBaseActivity().runOnUiThread(new Runnable() {

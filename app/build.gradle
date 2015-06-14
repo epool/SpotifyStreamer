@@ -26,4 +26,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit:retrofit:1.9.0'  // Uses this to create RESTful Requests
     compile 'com.squareup.okhttp:okhttp:2.4.0'  // Uses this to create HTTP connections
+
+    compile 'com.facebook.stetho:stetho:1.1.1'
+    compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
 }

@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
-import kaaes.spotify.webapi.android.SpotifyService;
-
 /**
  * Base fragment for common fragments operations.
  * Created by EduardoPool on 6/9/15.
@@ -25,10 +23,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected ActionBar getSupportActionBar() {
         return getBaseActivity().getSupportActionBar();
-    }
-
-    public SpotifyService getSpotifyService() {
-        return getBaseActivity().getSpotifyService();
     }
 
     public void showToastMessage(int stringResourceId) {
