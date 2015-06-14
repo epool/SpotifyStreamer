@@ -3,25 +3,51 @@ package mx.eduardopool.spotifystreamer.adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import kaaes.spotify.webapi.android.models.Artist;
 import mx.eduardopool.spotifystreamer.R;
+import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 
 /**
  * Adapter for artists.
  * Created by EduardoPool on 6/9/15.
  */
-public class ArtistAdapter extends ArrayAdapter<Artist> {
+public class ArtistAdapter extends BaseAdapter {
+    private Context context;
+    private ArrayList<ArtistBean> artistBeans = new ArrayList<>();
 
-    public ArtistAdapter(Context context, List<Artist> objects) {
-        super(context, 0, objects);
+    public ArtistAdapter(Context context, ArrayList<ArtistBean> artistBeans) {
+        this.context = context;
+        this.artistBeans = artistBeans;
+    }
+
+    public ArrayList<ArtistBean> getArtistBeans() {
+        return artistBeans;
+    }
+
+    public void setArtistBeans(ArrayList<ArtistBean> artistBeans) {
+        this.artistBeans = artistBeans;
+    }
+
+    @Override
+    public int getCount() {
+        return artistBeans.size();
+    }
+
+    @Override
+    public ArtistBean getItem(int position) {
+        return artistBeans.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -29,20 +55,18 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
         View rowView = convertView;
         // reuse views
         if (rowView == null) {
-            rowView = View.inflate(getContext(), R.layout.artist_row_item, null);
+            rowView = View.inflate(context, R.layout.artist_row_item, null);
             // configure view holder
             ArtistHolder viewHolder = new ArtistHolder(rowView);
             rowView.setTag(viewHolder);
         }
 
-        Artist artist = getItem(position);
-
-        String artistImageUrl = artist.images.isEmpty() ? null : artist.images.get(artist.images.size() - 1).url;
+        ArtistBean artist = getItem(position);
 
         // fill data
         ArtistHolder holder = (ArtistHolder) rowView.getTag();
-        Picasso.with(getContext()).load(artistImageUrl).placeholder(R.mipmap.ic_launcher).into(holder.artistImageView);
-        holder.artistNameTextView.setText(artist.name);
+        Picasso.with(context).load(artist.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.artistImageView);
+        holder.artistNameTextView.setText(artist.getName());
 
         return rowView;
     }

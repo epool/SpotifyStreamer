@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import mx.eduardopool.spotifystreamer.adapters.ArtistAdapter;
+import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.util.ViewUtil;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 import retrofit.Callback;
@@ -32,10 +33,15 @@ import retrofit.client.Response;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends BaseFragment implements SearchView.OnQueryTextListener, BaseActivity.OnSearchVoiceResultListener {
+    private final static String QUERY_PARAM = "query";
+    private final static String ARTIST_BEANS_PARAM = "artistBeans";
+    private final static String IS_EXPANDED_PARAM = "isSearchViewExpanded";
+
     boolean isSearchViewExpanded;
     private ArtistAdapter artistAdapter;
     private SearchView searchView;
     private String query;
+    private ArrayList<ArtistBean> artistBeans;
 
     public MainActivityFragment() {
     }
@@ -52,6 +58,14 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        if (savedInstanceState != null) {
+            query = savedInstanceState.getString(QUERY_PARAM);
+            isSearchViewExpanded = savedInstanceState.getBoolean(IS_EXPANDED_PARAM);
+            artistBeans = savedInstanceState.getParcelableArrayList(ARTIST_BEANS_PARAM);
+        } else {
+            artistBeans = new ArrayList<>();
+        }
     }
 
     @Override
@@ -59,19 +73,25 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         ListView listView = (ListView) view.findViewById(android.R.id.list);
-        if (artistAdapter == null) {
-            artistAdapter = new ArtistAdapter(getBaseActivity(), new ArrayList<Artist>());
-        }
+        artistAdapter = new ArtistAdapter(getBaseActivity(), artistBeans);
         listView.setAdapter(artistAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Artist artist = artistAdapter.getItem(position);
-                startActivity(TopTenTracksActivity.getLaunchIntent(getBaseActivity(), artist.id, artist.name));
+                ArtistBean artistBean = artistAdapter.getItem(position);
+                startActivity(TopTenTracksActivity.getLaunchIntent(getBaseActivity(), artistBean.getId(), artistBean.getName()));
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(QUERY_PARAM, query);
+        outState.putBoolean(IS_EXPANDED_PARAM, isSearchViewExpanded);
+        outState.putParcelableArrayList(ARTIST_BEANS_PARAM, artistBeans);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -159,12 +179,16 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
                 getBaseActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        artistAdapter.clear();
+                        artistBeans.clear();
                         if (artistsPager.artists.items.isEmpty()) {
                             showToastMessage(R.string.no_artist_found);
                         } else {
-                            artistAdapter.addAll(artistsPager.artists.items);
+                            for (Artist artist : artistsPager.artists.items) {
+                                ArtistBean artistBean = new ArtistBean(artist);
+                                artistBeans.add(artistBean);
+                            }
                         }
+                        artistAdapter.notifyDataSetChanged();
                     }
                 });
             }

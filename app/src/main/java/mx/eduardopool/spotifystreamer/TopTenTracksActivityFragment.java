@@ -15,6 +15,7 @@ import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 import mx.eduardopool.spotifystreamer.adapters.TrackAdapter;
 import mx.eduardopool.spotifystreamer.commons.Constants;
+import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -24,9 +25,14 @@ import retrofit.client.Response;
  * A placeholder fragment containing a simple view.
  */
 public class TopTenTracksActivityFragment extends BaseFragment {
+    private final static String ARTIST_ID_PARAM = "artistId";
+    private final static String ARTIST_NAME_PARAM = "artistName";
+    private final static String TRACK_BEANS_PARAM = "trackBeans";
+
     private TrackAdapter trackAdapter;
     private String artistId;
     private String artistName;
+    private ArrayList<TrackBean> trackBeans;
 
     public TopTenTracksActivityFragment() {
     }
@@ -44,8 +50,15 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        artistId = getArguments().getString(Constants.Extras.ARTIST_ID);
-        artistName = getArguments().getString(Constants.Extras.ARTIST_NAME);
+        if (savedInstanceState != null) {
+            artistId = savedInstanceState.getString(ARTIST_ID_PARAM);
+            artistName = savedInstanceState.getString(ARTIST_NAME_PARAM);
+            trackBeans = savedInstanceState.getParcelableArrayList(TRACK_BEANS_PARAM);
+        } else {
+            artistId = getArguments().getString(Constants.Extras.ARTIST_ID);
+            artistName = getArguments().getString(Constants.Extras.ARTIST_NAME);
+            trackBeans = new ArrayList<>();
+        }
     }
 
     @Override
@@ -53,9 +66,10 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_top_ten_tracks, container, false);
 
         ListView listView = (ListView) view.findViewById(android.R.id.list);
-        if (trackAdapter == null) {
-            trackAdapter = new TrackAdapter(getActivity(), new ArrayList<Track>());
+        trackAdapter = new TrackAdapter(getActivity(), trackBeans);
+        listView.setAdapter(trackAdapter);
 
+        if (savedInstanceState == null) {
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put(SpotifyService.COUNTRY, Constants.Countries.MX);
             SpotifyWS.getSpotifyService().getArtistTopTrack(artistId, queryMap, new Callback<Tracks>() {
@@ -64,12 +78,16 @@ public class TopTenTracksActivityFragment extends BaseFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            trackAdapter.clear();
+                            trackBeans.clear();
                             if (tracks.tracks.isEmpty()) {
                                 showToastMessage(R.string.artist_without_top_tracks);
                             } else {
-                                trackAdapter.addAll(tracks.tracks);
+                                for (Track track : tracks.tracks) {
+                                    TrackBean trackBean = new TrackBean(track);
+                                    trackBeans.add(trackBean);
+                                }
                             }
+                            trackAdapter.notifyDataSetChanged();
                         }
                     });
                 }
@@ -85,11 +103,17 @@ public class TopTenTracksActivityFragment extends BaseFragment {
                 }
             });
         }
-        listView.setAdapter(trackAdapter);
 
         setActionBarSubTitle(artistName);
 
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(ARTIST_ID_PARAM, artistId);
+        outState.putString(ARTIST_NAME_PARAM, artistName);
+        outState.putParcelableArrayList(TRACK_BEANS_PARAM, trackBeans);
+        super.onSaveInstanceState(outState);
+    }
 }
