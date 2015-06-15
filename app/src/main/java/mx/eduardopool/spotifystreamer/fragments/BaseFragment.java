@@ -1,7 +1,9 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+
+import mx.eduardopool.spotifystreamer.activities.BaseActivity;
 
 /**
  * Base fragment for common fragments operations.

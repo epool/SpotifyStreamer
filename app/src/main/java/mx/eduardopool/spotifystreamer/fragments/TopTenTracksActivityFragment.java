@@ -1,4 +1,4 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
+import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.adapters.TrackAdapter;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.commons.Constants;

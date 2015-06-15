@@ -1,4 +1,4 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.commons.Constants;
+import mx.eduardopool.spotifystreamer.fragments.TopTenTracksActivityFragment;
 
 public class TopTenTracksActivity extends BaseActivity {
 

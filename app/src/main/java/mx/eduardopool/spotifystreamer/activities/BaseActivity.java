@@ -1,4 +1,4 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.activities;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Handles the search action intent and calls the {@link mx.eduardopool.spotifystreamer.BaseActivity.OnSearchVoiceResultListener}
+     * Handles the search action intent and calls the {@link BaseActivity.OnSearchVoiceResultListener}
      * of all the current fragments who implemented the interface
      *
      * @param intent Intent to validate if is of action search

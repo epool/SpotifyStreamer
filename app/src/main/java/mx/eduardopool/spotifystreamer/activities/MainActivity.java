@@ -1,4 +1,4 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.commons.Constants;
+import mx.eduardopool.spotifystreamer.fragments.MainActivityFragment;
 
 
 public class MainActivity extends BaseActivity {

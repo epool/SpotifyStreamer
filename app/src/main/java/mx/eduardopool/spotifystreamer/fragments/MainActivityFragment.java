@@ -1,4 +1,4 @@
-package mx.eduardopool.spotifystreamer;
+package mx.eduardopool.spotifystreamer.fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
+import mx.eduardopool.spotifystreamer.R;
+import mx.eduardopool.spotifystreamer.activities.BaseActivity;
+import mx.eduardopool.spotifystreamer.activities.TopTenTracksActivity;
 import mx.eduardopool.spotifystreamer.adapters.ArtistAdapter;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.util.ViewUtil;
