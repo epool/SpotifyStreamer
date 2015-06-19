@@ -1,9 +1,11 @@
 package mx.eduardopool.spotifystreamer.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
@@ -31,6 +34,8 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     private final static String ARTIST_NAME_PARAM = "artistName";
     private final static String TRACK_BEANS_PARAM = "trackBeans";
 
+    @InjectView(R.id.progress_bar_container)
+    FrameLayout progressBarFrameLayout;
     private TrackAdapter trackAdapter;
     private String artistId;
     private String artistName;
@@ -63,9 +68,10 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         }
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_top_ten_tracks, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         trackAdapter = new TrackAdapter(getActivity(), trackBeans);
@@ -74,6 +80,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         if (savedInstanceState == null) {
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put(SpotifyService.COUNTRY, Constants.Countries.MX);
+            progressBarFrameLayout.setVisibility(View.VISIBLE);
             SpotifyWS.getSpotifyService().getArtistTopTrack(artistId, queryMap, new Callback<Tracks>() {
                 @Override
                 public void success(final Tracks tracks, Response response) {
@@ -90,6 +97,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
                                 }
                             }
                             trackAdapter.notifyDataSetChanged();
+                            progressBarFrameLayout.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -100,6 +108,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
                         @Override
                         public void run() {
                             showToastMessage(error.getMessage());
+                            progressBarFrameLayout.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -109,6 +118,11 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         setActionBarSubTitle(artistName);
 
         return view;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_top_ten_tracks;
     }
 
     @Override

@@ -3,6 +3,7 @@ package mx.eduardopool.spotifystreamer.fragments;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -13,12 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import mx.eduardopool.spotifystreamer.R;
@@ -41,7 +44,9 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     private final static String ARTIST_BEANS_PARAM = "artistBeans";
     private final static String IS_EXPANDED_PARAM = "isSearchViewExpanded";
 
-    boolean isSearchViewExpanded;
+    @InjectView(R.id.progress_bar_container)
+    FrameLayout progressBarFrameLayout;
+    private boolean isSearchViewExpanded;
     private ArtistAdapter artistAdapter;
     private SearchView searchView;
     private String query;
@@ -72,9 +77,10 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
         }
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         artistAdapter = new ArtistAdapter(getBaseActivity(), artistBeans);
@@ -88,6 +94,11 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
         });
 
         return view;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_main;
     }
 
     @Override
@@ -177,6 +188,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
             showToastMessage(R.string.empty_artist_name);
             return;
         }
+        progressBarFrameLayout.setVisibility(View.VISIBLE);
         SpotifyWS.getSpotifyService().searchArtists(query, new Callback<ArtistsPager>() {
             @Override
             public void success(final ArtistsPager artistsPager, Response response) {
@@ -193,6 +205,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
                             }
                         }
                         artistAdapter.notifyDataSetChanged();
+                        progressBarFrameLayout.setVisibility(View.GONE);
                     }
                 });
             }
@@ -203,6 +216,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
                     @Override
                     public void run() {
                         showToastMessage(error.getMessage());
+                        progressBarFrameLayout.setVisibility(View.GONE);
                     }
                 });
             }
