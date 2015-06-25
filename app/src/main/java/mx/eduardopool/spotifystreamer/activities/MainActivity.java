@@ -1,30 +1,32 @@
 package mx.eduardopool.spotifystreamer.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import mx.eduardopool.spotifystreamer.R;
-import mx.eduardopool.spotifystreamer.commons.Constants;
+import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.fragments.MainActivityFragment;
+import mx.eduardopool.spotifystreamer.fragments.TopTenTracksActivityFragment;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainActivityFragment.Callback {
+    private boolean mIsTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(Constants.Tags.MAIN_ACTIVITY_FRAGMENT);
-        if (fragment == null) {
-            fragment = MainActivityFragment.newInstance();
-            fragmentManager.beginTransaction()
-                    .add(R.id.container, fragment, Constants.Tags.MAIN_ACTIVITY_FRAGMENT)
-                    .commit();
-        }
-
+        mIsTablet = findViewById(R.id.top_ten_tracks_container) != null;
     }
 
+    @Override
+    public void onArtistClicked(ArtistBean artistBean) {
+        if (mIsTablet) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.top_ten_tracks_container, TopTenTracksActivityFragment.newInstance(artistBean))
+                    .commit();
+        } else {
+            startActivity(TopTenTracksActivity.getLaunchIntent(this, artistBean));
+        }
+    }
 }

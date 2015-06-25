@@ -6,8 +6,10 @@
 
     <ListView
         android:id="@android:id/list"
+        style="@style/SpotifyStreamerListStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@null"
         tools:listitem="@layout/artist_row_item" />
 
     <FrameLayout

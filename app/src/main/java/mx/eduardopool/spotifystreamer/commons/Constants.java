@@ -7,7 +7,7 @@ package mx.eduardopool.spotifystreamer.commons;
 public interface Constants {
 
     interface Extras {
-        String ARTIST_ID = "ExtraArtistId";
+        String ARTIST_BEAN = "ExtraArtistBean";
         String ARTIST_NAME = "ExtraArtistName";
     }
 

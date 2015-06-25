@@ -4,18 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import mx.eduardopool.spotifystreamer.R;
+import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.commons.Constants;
 import mx.eduardopool.spotifystreamer.fragments.TopTenTracksActivityFragment;
 
 public class TopTenTracksActivity extends BaseActivity {
 
-    public static Intent getLaunchIntent(Context context, String artistId, String artistName) {
+    public static Intent getLaunchIntent(Context context, ArtistBean artistBean) {
         Intent intent = new Intent(context, TopTenTracksActivity.class);
-        intent.putExtra(Constants.Extras.ARTIST_ID, artistId);
-        intent.putExtra(Constants.Extras.ARTIST_NAME, artistName);
+        intent.putExtra(Constants.Extras.ARTIST_BEAN, artistBean);
         return intent;
     }
 
@@ -24,18 +23,14 @@ public class TopTenTracksActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_ten_tracks);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(Constants.Tags.TOP_TEN_TRACKS_ACTIVITY_FRAGMENT);
-        if (fragment == null) {
+        if (savedInstanceState == null) {
             Intent intent = getIntent();
-            String artistId = intent.getStringExtra(Constants.Extras.ARTIST_ID);
-            String artistName = intent.getStringExtra(Constants.Extras.ARTIST_NAME);
-            fragment = TopTenTracksActivityFragment.newInstance(artistId, artistName);
-            fragmentManager.beginTransaction()
-                    .add(R.id.container, fragment, Constants.Tags.TOP_TEN_TRACKS_ACTIVITY_FRAGMENT)
+            ArtistBean artistBean = intent.getParcelableExtra(Constants.Extras.ARTIST_BEAN);
+            Fragment fragment = TopTenTracksActivityFragment.newInstance(artistBean);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.top_ten_tracks_container, fragment, Constants.Tags.TOP_TEN_TRACKS_ACTIVITY_FRAGMENT)
                     .commit();
         }
-
     }
 
 }

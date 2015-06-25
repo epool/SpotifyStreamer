@@ -1,13 +1,17 @@
 package mx.eduardopool.spotifystreamer.fragments;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +23,7 @@ import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.adapters.TrackAdapter;
+import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.commons.Constants;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
@@ -30,25 +35,21 @@ import retrofit.client.Response;
  * A placeholder fragment containing a simple view.
  */
 public class TopTenTracksActivityFragment extends BaseFragment {
-    private final static String ARTIST_ID_PARAM = "artistId";
-    private final static String ARTIST_NAME_PARAM = "artistName";
     private final static String TRACK_BEANS_PARAM = "trackBeans";
 
     @InjectView(R.id.progress_bar_container)
     FrameLayout progressBarFrameLayout;
     private TrackAdapter trackAdapter;
-    private String artistId;
-    private String artistName;
+    private ArtistBean artistBean;
     private ArrayList<TrackBean> trackBeans;
 
     public TopTenTracksActivityFragment() {
     }
 
-    public static TopTenTracksActivityFragment newInstance(String artistId, String artistName) {
+    public static TopTenTracksActivityFragment newInstance(ArtistBean artistBean) {
         TopTenTracksActivityFragment topTenTracksActivityFragment = new TopTenTracksActivityFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.Extras.ARTIST_ID, artistId);
-        args.putString(Constants.Extras.ARTIST_NAME, artistName);
+        args.putParcelable(Constants.Extras.ARTIST_BEAN, artistBean);
         topTenTracksActivityFragment.setArguments(args);
         return topTenTracksActivityFragment;
     }
@@ -58,12 +59,10 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            artistId = savedInstanceState.getString(ARTIST_ID_PARAM);
-            artistName = savedInstanceState.getString(ARTIST_NAME_PARAM);
+            artistBean = savedInstanceState.getParcelable(Constants.Extras.ARTIST_BEAN);
             trackBeans = savedInstanceState.getParcelableArrayList(TRACK_BEANS_PARAM);
         } else {
-            artistId = getArguments().getString(Constants.Extras.ARTIST_ID);
-            artistName = getArguments().getString(Constants.Extras.ARTIST_NAME);
+            artistBean = getArguments().getParcelable(Constants.Extras.ARTIST_BEAN);
             trackBeans = new ArrayList<>();
         }
     }
@@ -76,12 +75,33 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         trackAdapter = new TrackAdapter(getActivity(), trackBeans);
         listView.setAdapter(trackAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TrackBean trackBean = trackAdapter.getItem(position);
+
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mediaPlayer.setDataSource(trackBean.getPreviewUrl());
+                } catch (IOException e) {
+                    showToastMessage(e.getMessage());
+                }
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+                mediaPlayer.prepareAsync();
+            }
+        });
 
         if (savedInstanceState == null) {
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put(SpotifyService.COUNTRY, Constants.Countries.MX);
             progressBarFrameLayout.setVisibility(View.VISIBLE);
-            SpotifyWS.getSpotifyService().getArtistTopTrack(artistId, queryMap, new Callback<Tracks>() {
+            SpotifyWS.getSpotifyService().getArtistTopTrack(artistBean.getId(), queryMap, new Callback<Tracks>() {
                 @Override
                 public void success(final Tracks tracks, Response response) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -115,7 +135,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
             });
         }
 
-        setActionBarSubTitle(artistName);
+        setActionBarSubTitle(artistBean.getName());
 
         return view;
     }
@@ -127,8 +147,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(ARTIST_ID_PARAM, artistId);
-        outState.putString(ARTIST_NAME_PARAM, artistName);
+        outState.putParcelable(Constants.Extras.ARTIST_BEAN, artistBean);
         outState.putParcelableArrayList(TRACK_BEANS_PARAM, trackBeans);
         super.onSaveInstanceState(outState);
     }

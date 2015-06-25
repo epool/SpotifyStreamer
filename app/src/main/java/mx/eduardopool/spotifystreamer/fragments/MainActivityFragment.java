@@ -26,12 +26,10 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.activities.BaseActivity;
-import mx.eduardopool.spotifystreamer.activities.TopTenTracksActivity;
 import mx.eduardopool.spotifystreamer.adapters.ArtistAdapter;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.util.ViewUtil;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -51,6 +49,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     private SearchView searchView;
     private String query;
     private ArrayList<ArtistBean> artistBeans;
+    private int mPosition;
 
     public MainActivityFragment() {
     }
@@ -89,7 +88,8 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArtistBean artistBean = artistAdapter.getItem(position);
-                startActivity(TopTenTracksActivity.getLaunchIntent(getBaseActivity(), artistBean.getId(), artistBean.getName()));
+                ((Callback) getBaseActivity()).onArtistClicked(artistBean);
+                mPosition = position;
             }
         });
 
@@ -189,7 +189,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
             return;
         }
         progressBarFrameLayout.setVisibility(View.VISIBLE);
-        SpotifyWS.getSpotifyService().searchArtists(query, new Callback<ArtistsPager>() {
+        SpotifyWS.getSpotifyService().searchArtists(query, new retrofit.Callback<ArtistsPager>() {
             @Override
             public void success(final ArtistsPager artistsPager, Response response) {
                 getBaseActivity().runOnUiThread(new Runnable() {
@@ -221,6 +221,10 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
                 });
             }
         });
+    }
+
+    public interface Callback {
+        void onArtistClicked(ArtistBean artistBean);
     }
 
 }
