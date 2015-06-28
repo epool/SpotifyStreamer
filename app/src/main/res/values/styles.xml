@@ -5,7 +5,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="SpotifyStreamerListStyle">
-    </style>
+    <style name="SpotifyStreamerListStyle"></style>
 
 </resources>

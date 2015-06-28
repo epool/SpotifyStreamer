@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
@@ -71,12 +70,9 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         trackAdapter = new TrackAdapter(getActivity(), trackBeans);
         listView.setAdapter(trackAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TrackBean trackBean = trackAdapter.getItem(position);
-                ((Callback) getBaseActivity()).onTrackClicked(artistBean, trackBean);
-            }
+        listView.setOnItemClickListener((parent, v, position, id) -> {
+            TrackBean trackBean = trackAdapter.getItem(position);
+            ((Callback) getBaseActivity()).onTrackClicked(artistBean, trackBean);
         });
 
         if (savedInstanceState == null) {
@@ -86,32 +82,26 @@ public class TopTenTracksActivityFragment extends BaseFragment {
             SpotifyWS.getSpotifyService().getArtistTopTrack(artistBean.getId(), queryMap, new retrofit.Callback<Tracks>() {
                 @Override
                 public void success(final Tracks tracks, Response response) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            trackBeans.clear();
-                            if (tracks.tracks.isEmpty()) {
-                                showToastMessage(R.string.artist_without_top_tracks);
-                            } else {
-                                for (Track track : tracks.tracks) {
-                                    TrackBean trackBean = new TrackBean(track);
-                                    trackBeans.add(trackBean);
-                                }
+                    getActivity().runOnUiThread(() -> {
+                        trackBeans.clear();
+                        if (tracks.tracks.isEmpty()) {
+                            showToastMessage(R.string.artist_without_top_tracks);
+                        } else {
+                            for (Track track : tracks.tracks) {
+                                TrackBean trackBean = new TrackBean(track);
+                                trackBeans.add(trackBean);
                             }
-                            trackAdapter.notifyDataSetChanged();
-                            progressBarFrameLayout.setVisibility(View.GONE);
                         }
+                        trackAdapter.notifyDataSetChanged();
+                        progressBarFrameLayout.setVisibility(View.GONE);
                     });
                 }
 
                 @Override
                 public void failure(final RetrofitError error) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToastMessage(error.getMessage());
-                            progressBarFrameLayout.setVisibility(View.GONE);
-                        }
+                    getActivity().runOnUiThread(() -> {
+                        showToastMessage(error.getMessage());
+                        progressBarFrameLayout.setVisibility(View.GONE);
                     });
                 }
             });
