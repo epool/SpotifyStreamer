@@ -4,11 +4,13 @@ import android.os.Bundle;
 
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
+import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.fragments.MainActivityFragment;
 import mx.eduardopool.spotifystreamer.fragments.TopTenTracksActivityFragment;
+import mx.eduardopool.spotifystreamer.fragments.TrackPlayerActivityFragment;
 
 
-public class MainActivity extends BaseActivity implements MainActivityFragment.Callback {
+public class MainActivity extends BaseActivity implements MainActivityFragment.Callback, TopTenTracksActivityFragment.Callback {
     private boolean mIsTablet;
 
     @Override
@@ -27,6 +29,14 @@ public class MainActivity extends BaseActivity implements MainActivityFragment.C
                     .commit();
         } else {
             startActivity(TopTenTracksActivity.getLaunchIntent(this, artistBean));
+        }
+    }
+
+    @Override
+    public void onTrackClicked(ArtistBean artistBean, TrackBean trackBean) {
+        if (mIsTablet) {
+            TrackPlayerActivityFragment trackPlayerActivityFragment = TrackPlayerActivityFragment.newInstance(artistBean, trackBean);
+            trackPlayerActivityFragment.show(getSupportFragmentManager(), "TrackPlayerActivityFragment");
         }
     }
 }

@@ -9,33 +9,31 @@ import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.commons.Constants;
-import mx.eduardopool.spotifystreamer.fragments.TopTenTracksActivityFragment;
+import mx.eduardopool.spotifystreamer.fragments.TrackPlayerActivityFragment;
 
-public class TopTenTracksActivity extends BaseActivity implements TopTenTracksActivityFragment.Callback {
+public class TrackPlayerActivity extends BaseActivity {
 
-    public static Intent getLaunchIntent(Context context, ArtistBean artistBean) {
-        Intent intent = new Intent(context, TopTenTracksActivity.class);
+    public static Intent getLaunchIntent(Context context, ArtistBean artistBean, TrackBean trackBean) {
+        Intent intent = new Intent(context, TrackPlayerActivity.class);
         intent.putExtra(Constants.Extras.ARTIST_BEAN, artistBean);
+        intent.putExtra(Constants.Extras.TRACK_BEAN, trackBean);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_ten_tracks);
+        setContentView(R.layout.activity_track_player);
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             ArtistBean artistBean = intent.getParcelableExtra(Constants.Extras.ARTIST_BEAN);
-            Fragment fragment = TopTenTracksActivityFragment.newInstance(artistBean);
+            TrackBean trackBean = intent.getParcelableExtra(Constants.Extras.TRACK_BEAN);
+            Fragment fragment = TrackPlayerActivityFragment.newInstance(artistBean, trackBean);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.top_ten_tracks_container, fragment)
+                    .add(R.id.track_player_container, fragment)
                     .commit();
         }
     }
 
-    @Override
-    public void onTrackClicked(ArtistBean artistBean, TrackBean trackBean) {
-        startActivity(TrackPlayerActivity.getLaunchIntent(this, artistBean, trackBean));
-    }
 }

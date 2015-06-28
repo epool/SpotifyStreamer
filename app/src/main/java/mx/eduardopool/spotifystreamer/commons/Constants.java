@@ -8,11 +8,10 @@ public interface Constants {
 
     interface Extras {
         String ARTIST_BEAN = "ExtraArtistBean";
-        String ARTIST_NAME = "ExtraArtistName";
+        String TRACK_BEAN = "ExtraTrackBean";
     }
 
     interface Tags {
-        String MAIN_ACTIVITY_FRAGMENT = "MainActivityFragment";
         String TOP_TEN_TRACKS_ACTIVITY_FRAGMENT = "TopTenTracksActivityFragment";
     }
 

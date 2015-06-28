@@ -1,7 +1,5 @@
 package mx.eduardopool.spotifystreamer.fragments;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +24,6 @@ import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
 import mx.eduardopool.spotifystreamer.commons.Constants;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -79,21 +75,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TrackBean trackBean = trackAdapter.getItem(position);
-
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(trackBean.getPreviewUrl());
-                } catch (IOException e) {
-                    showToastMessage(e.getMessage());
-                }
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mp.start();
-                    }
-                });
-                mediaPlayer.prepareAsync();
+                ((Callback) getBaseActivity()).onTrackClicked(artistBean, trackBean);
             }
         });
 
@@ -101,7 +83,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
             Map<String, Object> queryMap = new HashMap<>();
             queryMap.put(SpotifyService.COUNTRY, Constants.Countries.MX);
             progressBarFrameLayout.setVisibility(View.VISIBLE);
-            SpotifyWS.getSpotifyService().getArtistTopTrack(artistBean.getId(), queryMap, new Callback<Tracks>() {
+            SpotifyWS.getSpotifyService().getArtistTopTrack(artistBean.getId(), queryMap, new retrofit.Callback<Tracks>() {
                 @Override
                 public void success(final Tracks tracks, Response response) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -151,4 +133,9 @@ public class TopTenTracksActivityFragment extends BaseFragment {
         outState.putParcelableArrayList(TRACK_BEANS_PARAM, trackBeans);
         super.onSaveInstanceState(outState);
     }
+
+    public interface Callback {
+        void onTrackClicked(ArtistBean artistBean, TrackBean trackBean);
+    }
+
 }

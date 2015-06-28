@@ -12,5 +12,6 @@
 
     <string name="artist_name">Artist name&#8230;</string>
     <string name="title_activity_top_ten_tracks">Top 10 Tracks</string>
+    <string name="title_activity_track_player">Now playing</string>
 
 </resources>
