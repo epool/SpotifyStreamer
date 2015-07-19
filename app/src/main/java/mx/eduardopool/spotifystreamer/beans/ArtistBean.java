@@ -64,6 +64,26 @@ public class ArtistBean implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArtistBean)) return false;
+
+        ArtistBean that = (ArtistBean) o;
+
+        return !(id != null ? !id.equals(that.id) : that.id != null) &&
+                !(name != null ? !name.equals(that.name) : that.name != null) &&
+                !(imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

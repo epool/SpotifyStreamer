@@ -42,7 +42,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     private final static String IS_EXPANDED_PARAM = "isSearchViewExpanded";
 
     @InjectView(R.id.progress_bar_container)
-    FrameLayout progressBarFrameLayout;
+    protected FrameLayout progressBarFrameLayout;
     private boolean isSearchViewExpanded;
     private ArtistAdapter artistAdapter;
     private SearchView searchView;
@@ -51,13 +51,6 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     private int mPosition;
 
     public MainActivityFragment() {
-    }
-
-    public static MainActivityFragment newInstance() {
-        MainActivityFragment mainActivityFragment = new MainActivityFragment();
-        Bundle args = new Bundle();
-        mainActivityFragment.setArguments(args);
-        return mainActivityFragment;
     }
 
     @Override
@@ -79,6 +72,8 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        assert view != null;
 
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         artistAdapter = new ArtistAdapter(getBaseActivity(), artistBeans);
@@ -144,6 +139,7 @@ public class MainActivityFragment extends BaseFragment implements SearchView.OnQ
 
         if (isSearchViewExpanded) {
             searchMenuItem.expandActionView();
+            searchView.clearFocus();
         }
 
         super.onCreateOptionsMenu(menu, inflater);

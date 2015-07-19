@@ -33,7 +33,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     private final static String TRACK_BEANS_PARAM = "trackBeans";
 
     @InjectView(R.id.progress_bar_container)
-    FrameLayout progressBarFrameLayout;
+    protected FrameLayout progressBarFrameLayout;
     private TrackAdapter trackAdapter;
     private ArtistBean artistBean;
     private ArrayList<TrackBean> trackBeans;
@@ -67,13 +67,12 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        assert view != null;
+
         ListView listView = ButterKnife.findById(view, android.R.id.list);
         trackAdapter = new TrackAdapter(getActivity(), trackBeans);
         listView.setAdapter(trackAdapter);
-        listView.setOnItemClickListener((parent, v, position, id) -> {
-            TrackBean trackBean = trackAdapter.getItem(position);
-            ((Callback) getBaseActivity()).onTrackClicked(artistBean, trackBean);
-        });
+        listView.setOnItemClickListener((parent, v, position, id) -> ((Callback) getBaseActivity()).onTrackClicked(artistBean, trackBeans, position));
 
         if (savedInstanceState == null) {
             Map<String, Object> queryMap = new HashMap<>();
@@ -125,7 +124,7 @@ public class TopTenTracksActivityFragment extends BaseFragment {
     }
 
     public interface Callback {
-        void onTrackClicked(ArtistBean artistBean, TrackBean trackBean);
+        void onTrackClicked(ArtistBean artistBean, ArrayList<TrackBean> trackBeans, int trackBeanSelectedIndex);
     }
 
 }

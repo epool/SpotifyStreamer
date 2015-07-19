@@ -8,7 +8,9 @@ public interface Constants {
 
     interface Extras {
         String ARTIST_BEAN = "ExtraArtistBean";
-        String TRACK_BEAN = "ExtraTrackBean";
+        String TRACK_BEAN_SELECTED_INDEX = "ExtraTrackBean";
+        String TRACK_BEANS = "ExtraTrackBeans";
+        String TRACK_INDEX = "ExtraTrackIndex";
     }
 
     interface Tags {

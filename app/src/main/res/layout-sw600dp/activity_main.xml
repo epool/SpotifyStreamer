@@ -13,6 +13,11 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_main" />
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_dark" />
+
     <FrameLayout
         android:id="@+id/top_ten_tracks_container"
         android:layout_width="0dp"

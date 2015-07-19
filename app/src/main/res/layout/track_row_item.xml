@@ -12,7 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <ImageView
-        android:id="@+id/track_image_view"
+        android:id="@+id/album_artwork_image_view"
         android:layout_width="@dimen/thumbnail_size"
         android:layout_height="@dimen/thumbnail_size"
         android:contentDescription="@string/artist_image_view"

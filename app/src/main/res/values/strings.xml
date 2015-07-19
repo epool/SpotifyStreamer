@@ -5,6 +5,10 @@
     <string name="action_settings">Settings</string>
 
     <string name="artist_image_view">Artist image view</string>
+    <string name="album_image_view">Album image view</string>
+    <string name="previous_image_view">Previous image view</string>
+    <string name="play_pause_image_view">Play pause image view</string>
+    <string name="next_image_view">Next image view</string>
 
     <string name="no_artist_found">No artists found, please refine your search</string>
     <string name="empty_artist_name">Empty artist name</string>

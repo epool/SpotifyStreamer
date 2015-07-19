@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import java.util.ArrayList;
+
 import mx.eduardopool.spotifystreamer.R;
 import mx.eduardopool.spotifystreamer.beans.ArtistBean;
 import mx.eduardopool.spotifystreamer.beans.TrackBean;
@@ -35,7 +37,7 @@ public class TopTenTracksActivity extends BaseActivity implements TopTenTracksAc
     }
 
     @Override
-    public void onTrackClicked(ArtistBean artistBean, TrackBean trackBean) {
-        startActivity(TrackPlayerActivity.getLaunchIntent(this, artistBean, trackBean));
+    public void onTrackClicked(ArtistBean artistBean, ArrayList<TrackBean> trackBeans, int trackBeanSelectedIndex) {
+        startActivity(TrackPlayerActivity.getLaunchIntent(this, artistBean, trackBeans, trackBeanSelectedIndex));
     }
 }

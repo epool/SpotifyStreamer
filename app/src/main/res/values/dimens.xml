@@ -5,4 +5,6 @@
 
     <dimen name="thumbnail_size">60dp</dimen>
     <dimen name="left_margin">16dp</dimen>
+
+    <dimen name="cover_size">200dp</dimen>
 </resources>

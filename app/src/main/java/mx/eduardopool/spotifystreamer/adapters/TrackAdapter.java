@@ -65,7 +65,7 @@ public class TrackAdapter extends BaseAdapter {
 
         TrackBean trackBean = getItem(position);
 
-        Picasso.with(context).load(trackBean.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(trackHolder.trackImageView);
+        Picasso.with(context).load(trackBean.getSmallImageUrl()).placeholder(R.mipmap.ic_launcher).into(trackHolder.trackImageView);
         trackHolder.albumNameTextView.setText(trackBean.getAlbumName());
         trackHolder.trackNameTextView.setText(trackBean.getName());
 
@@ -73,7 +73,7 @@ public class TrackAdapter extends BaseAdapter {
     }
 
     static class TrackHolder {
-        @InjectView(R.id.track_image_view)
+        @InjectView(R.id.album_artwork_image_view)
         ImageView trackImageView;
         @InjectView(R.id.album_name_text_view)
         TextView albumNameTextView;
