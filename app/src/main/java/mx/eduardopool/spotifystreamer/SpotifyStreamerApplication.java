@@ -2,8 +2,10 @@ package mx.eduardopool.spotifystreamer;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 
+import io.fabric.sdk.android.Fabric;
 import mx.eduardopool.spotifystreamer.ws.SpotifyWS;
 
 /**
@@ -15,6 +17,7 @@ public class SpotifyStreamerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         SpotifyWS.init();
 

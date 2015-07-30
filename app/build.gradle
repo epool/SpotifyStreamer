@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -26,10 +32,12 @@ android {
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.1.0'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -44,4 +52,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
+        transitive = true;
+    }
 }
